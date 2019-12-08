@@ -1,0 +1,17 @@
+.card-body{
+    background-color: whitesmoke; 
+}
+
+.row{
+    background-color: white;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.fas{
+    font-size: 22px;
+}
+
+.card{
+    box-shadow: 5px 5px 5px grey;
+}
