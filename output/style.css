@@ -15,3 +15,11 @@
 .card{
     box-shadow: 5px 5px 5px grey;
 }
+
+nav{
+    background-color: indianred;
+    color: white;
+}
+h1{
+    margin: auto;
+}

@@ -2,6 +2,7 @@ var inquirer = require("inquirer");
 var Manager = require('./lib/Manager.js');
 var Engineer = require('./lib/Engineer.js');
 var Intern = require('./lib/Intern.js');
+fs = require('fs')
 var id = 1;
 
 
@@ -68,80 +69,37 @@ const collectInputs = async (Employees = []) => {
 };
 
 
-
-
-
-
-
 const main = async () => {
     const Employees = await collectInputs();
     console.log(Employees);
 
-    buildTeam(Employees);
+    HTML = buildTeam(Employees);
+    writeToHtml(HTML)
+    loadServer();
+    
 };
 
-function getTemplateHTML(employee) {
-    switch (employee.role) {
-        case 'Manager':
-            var specialLabel = 'Office Number';
-            var special = employee.officeNumber;
-            var logo = 'mug-hot';
-            break;
-        case 'Engineer':
-            var specialLabel = 'GitHub';
-            var special = employee.github;
-            var logo = 'glasses';
-            break;
-        case 'Intern':
-            var specialLabel = 'School';
-            var special = employee.school;
-            var logo = 'user-graduate';
-            break;
-    }
-
-    return `
-    <div class="card  mb-3" style="max-width: 16rem;">
-        <div class="card-header text-white bg-primary">
-            <h4>Jared</4>
-                <h5><i class="fas fa-${logo}"></i> ${employee.role}</h5>
-        </div>
-        <div class="card-body px-0">
-            <div class="container">
-                <div class="col">
-                    <div class="row border p-2">
-                        <span>ID: ${employee.id}</span>
-                    </div>
-                    <div class="row border p-2">
-                        <span>Email: <a href="">${employee.email}</a></span>
-                    </div>
-                    <div class="row border p-2">
-                        <span>${specialLabel}: ${special}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>`;
-}
 
 function buildTeam(Employees = []) {
-    Employees.forEach(employee => {
-        switch (employee.role) {
+    var HTML = "";
+    Employees.forEach(e => {
+        switch (e.role) {
             case 'Manager':
-                employee = new Manager(employee.name, employee.id, employee.email, employee.officeNumber)
+                e = new Manager(e.name, e.id, e.email, e.officeNumber)
                 var specialLabel = 'Office Number';
-                var special = employee.officeNumber;
+                var special = e.officeNumber;
                 var logo = 'mug-hot';
                 break;
             case 'Engineer':
-                employee = new Engineer(employee.name, employee.id, employee.email, employee.github)
+                e = new Engineer(e.name, e.id, e.email, e.github)
                 var specialLabel = 'GitHub';
-                var special = employee.github;
+                var special = e.github;
                 var logo = 'glasses';
                 break;
             case 'Intern':
-                employee = new Intern(employee.name, employee.id, employee.email, employee.school)
+                e = new Intern(e.name, e.id, e.email, e.school)
                 var specialLabel = 'School';
-                var special = employee.school;
+                var special = e.school;
                 var logo = 'user-graduate';
                 break;
         }
@@ -149,17 +107,17 @@ function buildTeam(Employees = []) {
         employeeHTML = `
         <div class="card  mb-3" style="max-width: 16rem;">
             <div class="card-header text-white bg-primary">
-                <h4>Jared</4>
-                    <h5><i class="fas fa-${logo}"></i> ${employee.role}</h5>
+                <h4>${e.name}</4>
+                    <h5><i class="fas fa-${logo}"></i> ${e.role}</h5>
             </div>
             <div class="card-body px-0">
                 <div class="container">
                     <div class="col">
                         <div class="row border p-2">
-                            <span>ID: ${employee.id}</span>
+                            <span>ID: ${e.id}</span>
                         </div>
                         <div class="row border p-2">
-                            <span>Email: <a href="">${employee.email}</a></span>
+                            <span>Email: <a href="">${e.email}</a></span>
                         </div>
                         <div class="row border p-2">
                             <span>${specialLabel}: ${special}</span>
@@ -168,12 +126,46 @@ function buildTeam(Employees = []) {
                 </div>
             </div>
         </div>`;
-        console.log(employeeHTML)
-        //append HTML to main.html
 
+        HTML += employeeHTML
     })
+    return HTML;
 }
 
 
+
+function writeToHtml(snippet){
+    fs.writeFile('./output/team.html', "", 'utf8', function (err) {
+        if (err) return console.log(err);
+     });    
+    fs.readFile('./output/main.html', 'utf8', function (err,data) {
+        if (err) {
+            return console.log(err);
+        }
+        data = data.replace(/\<\/body>/g, snippet + '</body>');
+        fs.writeFile('./output/team.html', data, 'utf8', function (err) {
+            if (err) return console.log(err);
+         });
+        });
+    };
+
+function loadServer(){
+    var path = require("path");
+    const express = require('express');
+
+    const app = new express();
+
+    const router = express.Router();
+
+    router.get('/',function(req,res){
+    res.sendFile(path.join(__dirname+'/output/team.html'));
+    });
+
+    app.use('/', router);
+    app.listen(process.env.port || 3000);
+
+    console.log('Running at Port 3000');
+
+}
 
 main();
