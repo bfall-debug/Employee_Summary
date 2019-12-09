@@ -4,6 +4,9 @@ var Engineer = require('./lib/Engineer.js');
 var Intern = require('./lib/Intern.js');
 var id = 1;
 
+
+
+
 const collectInputs = async (Employees = []) => {
     const prompts = [
         {
@@ -64,6 +67,12 @@ const collectInputs = async (Employees = []) => {
     return again ? collectInputs(newEmployees) : newEmployees;
 };
 
+
+
+
+
+
+
 const main = async () => {
     const Employees = await collectInputs();
     console.log(Employees);
@@ -71,25 +80,100 @@ const main = async () => {
     buildTeam(Employees);
 };
 
+function getTemplateHTML(employee) {
+    switch (employee.role) {
+        case 'Manager':
+            var specialLabel = 'Office Number';
+            var special = employee.officeNumber;
+            var logo = 'mug-hot';
+            break;
+        case 'Engineer':
+            var specialLabel = 'GitHub';
+            var special = employee.github;
+            var logo = 'glasses';
+            break;
+        case 'Intern':
+            var specialLabel = 'School';
+            var special = employee.school;
+            var logo = 'user-graduate';
+            break;
+    }
+
+    return `
+    <div class="card  mb-3" style="max-width: 16rem;">
+        <div class="card-header text-white bg-primary">
+            <h4>Jared</4>
+                <h5><i class="fas fa-${logo}"></i> ${employee.role}</h5>
+        </div>
+        <div class="card-body px-0">
+            <div class="container">
+                <div class="col">
+                    <div class="row border p-2">
+                        <span>ID: ${employee.id}</span>
+                    </div>
+                    <div class="row border p-2">
+                        <span>Email: <a href="">${employee.email}</a></span>
+                    </div>
+                    <div class="row border p-2">
+                        <span>${specialLabel}: ${special}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>`;
+}
+
 function buildTeam(Employees = []) {
-    Employees.forEach(Employee => {
-        switch (Employee.role) {
+    Employees.forEach(employee => {
+        switch (employee.role) {
             case 'Manager':
-                const newEmployee = new Manager(Employee.name, Employee.id, Employee.email, Employee.officeNumber)
+                employee = new Manager(employee.name, employee.id, employee.email, employee.officeNumber)
+                var specialLabel = 'Office Number';
+                var special = employee.officeNumber;
+                var logo = 'mug-hot';
                 break;
             case 'Engineer':
-                const newEmployee = new Engineer(Employee.name, Employee.id, Employee.email, Employee.github)
+                employee = new Engineer(employee.name, employee.id, employee.email, employee.github)
+                var specialLabel = 'GitHub';
+                var special = employee.github;
+                var logo = 'glasses';
                 break;
             case 'Intern':
-                const newEmployee = new Intern(Employee.name, Employee.id, Employee.email, Employee.school)
+                employee = new Intern(employee.name, employee.id, employee.email, employee.school)
+                var specialLabel = 'School';
+                var special = employee.school;
+                var logo = 'user-graduate';
                 break;
         }
-
-        // Generate HTML for each employee
-
+        
+        employeeHTML = `
+        <div class="card  mb-3" style="max-width: 16rem;">
+            <div class="card-header text-white bg-primary">
+                <h4>Jared</4>
+                    <h5><i class="fas fa-${logo}"></i> ${employee.role}</h5>
+            </div>
+            <div class="card-body px-0">
+                <div class="container">
+                    <div class="col">
+                        <div class="row border p-2">
+                            <span>ID: ${employee.id}</span>
+                        </div>
+                        <div class="row border p-2">
+                            <span>Email: <a href="">${employee.email}</a></span>
+                        </div>
+                        <div class="row border p-2">
+                            <span>${specialLabel}: ${special}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+        console.log(employeeHTML)
         //append HTML to main.html
+
     })
 }
+
 
 
 main();
