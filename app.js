@@ -105,7 +105,8 @@ function buildTeam(Employees = []) {
         }
         
         employeeHTML = `
-        <div class="card  mb-3" style="max-width: 16rem;">
+        <div class="col mx-auto mt-4">
+        <div class="card  mb-3" style="width: 16rem;">
             <div class="card-header text-white bg-primary">
                 <h4>${e.name}</4>
                     <h5><i class="fas fa-${logo}"></i> ${e.role}</h5>
@@ -125,14 +126,14 @@ function buildTeam(Employees = []) {
                     </div>
                 </div>
             </div>
+        </div>
         </div>`;
 
         HTML += employeeHTML
     })
+    HTML = "<div class='row container mx-auto'>" + HTML + "</div>"
     return HTML;
 }
-
-
 
 function writeToHtml(snippet){
     fs.writeFile('./output/team.html', "", 'utf8', function (err) {
