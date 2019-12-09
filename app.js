@@ -1,4 +1,7 @@
 var inquirer = require("inquirer");
+var Manager = require('./lib/Manager.js');
+var Engineer = require('./lib/Engineer.js');
+var Intern = require('./lib/Intern.js');
 var id = 1;
 
 const collectInputs = async (Employees = []) => {
@@ -21,7 +24,7 @@ const collectInputs = async (Employees = []) => {
         },
         {
             when: function (response) {
-                if(response.role === 'Manager'){
+                if (response.role === 'Manager') {
                     return response.role;
                 }
             },
@@ -30,7 +33,7 @@ const collectInputs = async (Employees = []) => {
         },
         {
             when: function (response) {
-                if(response.role === 'Engineer'){
+                if (response.role === 'Engineer') {
                     return response.role;
                 }
             },
@@ -39,7 +42,7 @@ const collectInputs = async (Employees = []) => {
         },
         {
             when: function (response) {
-                if(response.role === 'Intern'){
+                if (response.role === 'Intern') {
                     return response.role;
                 }
             },
@@ -64,6 +67,29 @@ const collectInputs = async (Employees = []) => {
 const main = async () => {
     const Employees = await collectInputs();
     console.log(Employees);
+
+    buildTeam(Employees);
 };
+
+function buildTeam(Employees = []) {
+    Employees.forEach(Employee => {
+        switch (Employee.role) {
+            case 'Manager':
+                const newEmployee = new Manager(Employee.name, Employee.id, Employee.email, Employee.officeNumber)
+                break;
+            case 'Engineer':
+                const newEmployee = new Engineer(Employee.name, Employee.id, Employee.email, Employee.github)
+                break;
+            case 'Intern':
+                const newEmployee = new Intern(Employee.name, Employee.id, Employee.email, Employee.school)
+                break;
+        }
+
+        // Generate HTML for each employee
+
+        //append HTML to main.html
+    })
+}
+
 
 main();
